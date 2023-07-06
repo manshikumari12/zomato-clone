@@ -20,7 +20,7 @@
 
         <form action="" id="cont">
             <div id="login-box">
-                <div class="left">
+                <div class="left" id="form">
               
                     <h1>signup</h1>
                     <input type="text" name="username" placeholder="username..." id="name">
@@ -57,29 +57,29 @@
 </html>
 <script>
 
-const formEl = document.querySelector('#cont');
-const nameEl = document.querySelector('#name');
-const emailEl = document.querySelector('#email');
-const passwordEl = document.querySelector('#password');
+let nameInput = document.getElementById("name");
+let emailInput = document.getElementById("email");
+let passwordInput = document.getElementById("password");
+let formSubmit = document.querySelector("form");
 
-formEl.addEventListener('submit', async (evnt)=>{
-    evnt.preventDefault();
-    let res = await fetch('http://localhost:1111/signup',{
-        body: JSON.stringify({name: nameEl.value, email: emailEl.value, password: passwordEl.value}),
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        }
-    })
-    let result = res.ok
-    res = await res.json();
-    if(result){
-        alert('Sign up Successful');
-        // Swal.fire("Successfully Registered", "success");
-        window.location.href='./login.html';
-    }else{
-        alert(res.msg);
-        // Swal.fire("Successfully Registered", "success");
+let signUpData =JSON.parse(localStorage.getItem("Chicken-signup"))||[];
+
+formSubmit.addEventListener("submit",()=>{
+   event.preventDefault();
+    if(nameInput.value!==""||emailInput.value!==""||passwordInput.value!=="" ){
+        let obj ={
+            name: nameInput.value,
+            email:emailInput.value,
+            password:passwordInput.value
+        };
+        signUpData.push(obj);
+        localStorage.setItem("Chicken-signup",JSON.stringify(signUpData));
+        alert("Sign up Successful")
+        location.href="login.html"
     }
+    else{
+        alert("ALERT! Fill in all the feilds")
+    }
+    
 })
 </script>

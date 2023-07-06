@@ -23,7 +23,7 @@
             </label>
             <h1 class="logo">Zomato</h1>
             <ul>
-                <li> <a href="https://www.zomato.com/partner-with-us"> Add restaurants</a></li>
+                <li> <a href="./product.html" id="product"> Add restaurants</a></li>
                 <li> <a href="#" id="login"> Log in</li></a>
                 <li> <a href="#" id="signup"> Sign up</li></a>
             </ul>
@@ -308,7 +308,7 @@ Sitemap
 <script>
     let login = document.getElementById('login')
     let signup = document.getElementById('signup')
-
+    let product = document.getElementById('product')
 
     login.addEventListener('click',()=>{
         window.location.href="./login.html"
@@ -316,6 +316,8 @@ Sitemap
     signup.addEventListener('click',()=>{
         window.location.href="./signup.html"
     })
-
-
+    product.addEventListener('click',()=>{
+        window.location.href="./product.html"
+    })
+   
 </script>

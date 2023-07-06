@@ -23,7 +23,7 @@
                     <h1>login</h1>
                  
         
-                    <input type="email" name="email" placeholder="email...." id="email">
+                    <input type="email" name="email" placeholder="email...." id="username">
         
                     <input type="password" name="password" placeholder="password..." id="password">
         
@@ -51,33 +51,32 @@
 
     </div>
     
-</body>
+   </body>
 </html>
 <script>
 
-const formEl = document.querySelector('#cont');
-const emailEl = document.querySelector('#email');
-const passwordEl = document.querySelector('#password');
+let emailInput = document.getElementById("username");
+let passwordInput = document.getElementById("password");
+let submitForm = document.querySelector("form");
 
-formEl.addEventListener('submit', async (evnt)=>{
-    evnt.preventDefault();
-    let res = await fetch('http://localhost:1111/login',{
-        body: JSON.stringify({email: emailEl.value, password: passwordEl.value}),
-        method: 'POST',
-        headers: {
-            'Content-type': 'application/json'
-        }
-    })
-    let result = res.ok
-    res = await res.json();
-    if(result){
-        alert('Login Successful');
-        localStorage.setItem('token', res.access_token);
-        localStorage.setItem('username', res.user);
-        localStorage.setItem('userId', res.userId);
-        window.location.href = './index.html'
-    }else{
-        alert(res.msg)
-    }
+let loginData=JSON.parse(localStorage.getItem("Chicken-signup"))||[];
+let userName=""
+submitForm.addEventListener("submit",()=>{
+    event.preventDefault();
+    console.log(loginData.length)
+
+for(let i=0;i<loginData.length;i++){
+    if(loginData[i].email===emailInput.value && loginData[i].password===passwordInput.value){
+                alert("Login Successful")
+                userName=loginData[i].name
+                localStorage.setItem("username",userName)
+                location.href="index.html"
+                break;
+            }
+            else {
+                alert("OOPS! Wrong Credentials")
+                 break;
+            }
+}
 })
 </script>
