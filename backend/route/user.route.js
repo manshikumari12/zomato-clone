@@ -29,7 +29,7 @@ userrouter.post("/login",async(req,res)=>{
         if(!isUserValid) return res.status(404).send({msg: "Wrong Credentials"});
         const result = await compare(password, isUserValid.password);
         if(result){
-            console.log(result)
+            // console.log(result)
             if(!isUserValid.isVerified){
                 console.log(!isUserValid.isVerified)
                 return res.status(404).send({msg: 'Your email is not verified'});
@@ -93,14 +93,27 @@ userrouter.post("/signup",async(req,res)=>{
 
 userrouter.get('/verify/:id', async(req,res)=>{
     try {
-        let {id} =req.params
-        await UserModel.findByIdAndUpdate(id, {isVerified: true})
-        res.send('<h2>email verified</h2>')
-        
-    } catch (err) {
-        res.status(500).send({msg: err.message});
+        const { id } = req.params;
+        console.log(id);
+        const user = await UserModel.findById(id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+    
+        if (user.isVerified) {
+            return res.status(200).json({ message: "Email already verified" });
+        }
+        await UserModel.findByIdAndUpdate(id, { isVerified: true });
+    
+        res.send(
+            `<h1>Hi ${user.name}, Your account is verified now!!! Return to the main page</h1>`
+        );
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
     }
+    
 })
+
 
 
 

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>| MENU</title>
+  
+    <link rel="stylesheet" href="./product.css">
+</head>
+<body>
+    <!-- Navbar Component -->
+    <div class="nav">
+     
+        <h1 id="logo">ZOMATO</h1>
+  
+        <div class="links">
+          <a href="#">Menu</a><a href="#">Stories</a><a href="#">About</a
+          ><a href="">Careers</a>
+        </div>
+        <div id="logout">
+         <h4>Welcome,  <span id="username"></span></h4>
+         <a href="cart.html" style="padding:12px;background-color:#dd1246;font-size: 16px;border: none;color:white;border-radius: 10px;" id="cartBtn">CART</a>
+         <a href="#" style="padding:12px;background-color:#dd1246;font-size: 16px;border: none;color:white;border-radius: 10px;" id="logoutBtn">Logout</a>
+        </div>
+        <div id="hamburger">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="18" x2="20" y2="18" />
+            </svg>
+        </div>
+      </div>
+      <!-- Links menu to show when hamburger is clicked -->
+  
+      <div class="hidden-links">
+        <ul>
+            <li><a href="cart.html">Cart</a></li>
+          <li><select name="">
+            <option value="">Sort by price</option>
+            <option value="asc">Low to high</option>
+            <option value="des">High to Low</option>
+        </select></li>
+          <li><select name="">
+            <option value="">Filter by Category</option>
+            <option value="chicken">Chicken</option>
+            <option value="burger">Burger</option>
+        </select></li>
+          <li><form action="">
+            <input type="text" placeholder="Search Products">
+            <input type="submit" value="Search">
+        </form></li>
+          <li><a href="#" id="logoutLink">LOG OUT</a></li>
+        </ul>
+      </div>
+      <h1 id="menu-head">CHECK  MENU</h1>
+      <div class="srchSrtFltr">
+        <select name="" id="sort">
+            <option value="">Sort by price</option>
+            <option value="asc">Low to high</option>
+            <option value="des">High to Low</option>
+        </select>
+        <form action="" id="form-main">
+            <input type="text" id="search-bar" placeholder="Search Products">
+            <input type="submit" value="Search">
+        </form>
+        <select name="" id="filter">
+            <option value="">Filter by Category</option>
+            <option value="chicken">Chicken</option>
+            <option value="burger">Burger</option>
+        </select>
+      </div>
+    <div class="container"></div>
+</body>
+
+   
+  </script>
+</html>
+<script>
+    // Declaring global variables
+let hamburger = document.getElementById("hamburger");
+let hiddenLinks = document.querySelector(".hidden-links");
+let user = document.getElementById("username");
+let userName =localStorage.getItem("username");
+user.innerText=userName
+let container = document.querySelector(".container");
+let logoutBtn = document.getElementById("logoutBtn");
+let logoutLink = document.getElementById("logoutLink");
+let sortFilter = document.getElementById("sort");
+let categoryFilter = document.getElementById("filter");
+let searchInput = document.getElementById("search-bar");
+let form = document.querySelector("#form-main");
+let logo = document.getElementById("logo");
+    logo.addEventListener("click",()=>{
+      location.href="index.html"
+    })
+let productData=[];
+let cartData=JSON.parse(localStorage.getItem("chicken-cart"))||[]
+// Buttons functionality hamburger
+hamburger.addEventListener("click",()=>{
+  hiddenLinks.classList.toggle("visible")
+})
+
+// Buttons functionality logout button
+logoutBtn.addEventListener("click",()=>{
+    confirm("Are you sure you want to logout");
+    location.href="index.html"
+})
+
+// Buttons functionality logout link
+logoutLink.addEventListener("click",()=>{
+    alert("LOGOUT SUCCESSFUL");
+    location.href="index.html"
+})
+
+// Fetching data from the API
+async function fetchData(){
+    try{
+     let request = await fetch("https://63c8f09ec3e2021b2d4c30d1.mockapi.io/food_products");
+     let response = await request.json();
+     productData=response
+     Display(productData)
+    }
+    catch(err){
+     console.log(err)
+    }
+}
+
+
+
+//Display function to show data on DOM
+function Display(data){
+    container.innerHTML="";
+    data.forEach((el,index)=>{
+        let card = document.createElement("div");
+        let img= document.createElement("img");
+        img.setAttribute("src",el.img)
+        let name = document.createElement("h2");
+        name.innerText=el.name
+        let desc= document.createElement("p");
+        desc.innerText=el.dsc;
+        let price = document.createElement("h2");
+        price.innerText="Price: $ "+el.price;
+        let rating = document.createElement("h3")
+        rating.innerText ="Rating:"+el.rate +"/5";
+        let cartBtn = document.createElement("button");
+        cartBtn.innerText="Add to Cart"
+        cartBtn.addEventListener("click",()=>{
+          let addedToCart =productData.filter((ele,i)=>{
+            if(i===index){
+                if(cartData.includes(ele)===false){
+                    cartData.push(ele);
+                    alert("Product added to cart")
+                    return true
+                    
+                }else{
+                    alert("Product already in cart!");
+                    return false 
+                }
+            }
+          });
+          localStorage.setItem("chicken-cart",JSON.stringify(cartData))
+        })
+        card.append(img,name,desc,price,rating,cartBtn);
+        container.append(card)
+    })
+}
+
+fetchData()  //calling the fetch function
+
+// Sort by price functionality
+sortFilter.addEventListener("change",()=>{
+   if(sortFilter.value===""){
+    Display(productData)
+   }else{
+    if(sortFilter.value==="asc"){
+        let Incsorted =productData.sort((a,b)=>{
+            return a.price-b.price})
+            console.log(productData)
+      Display(Incsorted)
+    }
+    else  if(sortFilter.value==="des"){
+        let Decsorted =productData.sort((a,b)=>{
+            return b.price-a.price})
+           Display(Decsorted)
+   }
+}
+})
+
+//Filter by category
+categoryFilter.addEventListener("change",()=>{
+    if(categoryFilter.value===""){
+        Display(productData)
+    }else{
+        if(categoryFilter.value==="chicken"){
+            let chickenCat = productData.filter((el)=>{
+                if(el.name.toLowerCase().includes(categoryFilter.value)){
+                    return true
+                }
+                else{
+                    return false
+                }
+            })
+            Display(chickenCat)
+        }
+        else  if(categoryFilter.value==="burger"){
+            let burgerCat = productData.filter((el)=>{
+                if(el.name.toLowerCase().includes(categoryFilter.value)||el.dsc.toLowerCase().includes(categoryFilter.value)){
+                    return true
+                }
+                else{
+                    return false
+                }
+            })
+            Display(burgerCat)
+        }
+    }
+})
+
+//Search functionality
+form.addEventListener("submit",()=>{
+    event.preventDefault();
+    let searched = productData.filter((el)=>{
+        if(el.name.toLowerCase().includes(searchInput.value.toLowerCase())||el.dsc.toLowerCase().includes(searchInput.value.toLowerCase())){
+            return true
+        }
+        else{
+            return false
+        }
+    });
+    Display(searched)
+})
+</script>

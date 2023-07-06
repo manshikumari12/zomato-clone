@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login-page</title>
+    <link rel="stylesheet" href="./login.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+  />
+</head>
+<body>
+    <div class="container">
+        <div class="conta">
+
+   
+
+        <form action="" id="cont">
+            <div id="login-box">
+                <div class="left">
+              
+                    <h1>login</h1>
+                 
+        
+                    <input type="email" name="email" placeholder="email...." id="email">
+        
+                    <input type="password" name="password" placeholder="password..." id="password">
+        
+        
+                    <input type="submit" name="Login_submit" value="Login me "  />
+        
+                    <a href="http://localhost:1111/auth/google"><button  id="google">Sign up with Google+</button></a></a> 
+                    <div class="right">
+               
+    
+                    </div>
+    
+                </div>
+
+           
+              
+    
+               
+            </div>
+         
+        
+
+        </form>
+    </div>
+
+    </div>
+    
+</body>
+</html>
+<script>
+
+const formEl = document.querySelector('#cont');
+const emailEl = document.querySelector('#email');
+const passwordEl = document.querySelector('#password');
+
+formEl.addEventListener('submit', async (evnt)=>{
+    evnt.preventDefault();
+    let res = await fetch('http://localhost:1111/login',{
+        body: JSON.stringify({email: emailEl.value, password: passwordEl.value}),
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    let result = res.ok
+    res = await res.json();
+    if(result){
+        alert('Login Successful');
+        localStorage.setItem('token', res.access_token);
+        localStorage.setItem('username', res.user);
+        localStorage.setItem('userId', res.userId);
+        window.location.href = './index.html'
+    }else{
+        alert(res.msg)
+    }
+})
+</script>

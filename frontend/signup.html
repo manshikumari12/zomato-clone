@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>signup-page</title>
+    <link rel="stylesheet" href="./signup.css">
+    <link
+
+    rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="conta">
+
+   
+
+        <form action="" id="cont">
+            <div id="login-box">
+                <div class="left">
+              
+                    <h1>signup</h1>
+                    <input type="text" name="username" placeholder="username..." id="name">
+        
+                    <input type="text" name="email" placeholder="email...." id="email">
+        
+                    <input type="text" name="password" placeholder="password..." id="password">
+        
+        
+                    <input type="submit" name="signup_submit" value="Sign me up"  />
+        
+                   <a href="http://localhost:1111/auth/google"></a> 
+                    <div class="right">
+               
+    
+                    </div>
+    
+                </div>
+
+              
+              
+    
+               
+            </div>
+         
+        
+
+        </form>
+    </div>
+
+    </div>
+    
+</body>
+</html>
+<script>
+
+const formEl = document.querySelector('#cont');
+const nameEl = document.querySelector('#name');
+const emailEl = document.querySelector('#email');
+const passwordEl = document.querySelector('#password');
+
+formEl.addEventListener('submit', async (evnt)=>{
+    evnt.preventDefault();
+    let res = await fetch('http://localhost:1111/signup',{
+        body: JSON.stringify({name: nameEl.value, email: emailEl.value, password: passwordEl.value}),
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+    let result = res.ok
+    res = await res.json();
+    if(result){
+        alert('Sign up Successful');
+        // Swal.fire("Successfully Registered", "success");
+        window.location.href='./login.html';
+    }else{
+        alert(res.msg);
+        // Swal.fire("Successfully Registered", "success");
+    }
+})
+</script>
